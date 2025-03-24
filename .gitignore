@@ -1,0 +1,53 @@
+# 🔹 Virtual environment (venv)
+venv/
+.env
+*.env
+
+# 🔹 Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 🔹 Logs and temporary files
+*.log
+logs/
+*.pid
+*.seed
+*.bak
+
+# 🔹 Dependency files (reinstall via requirements.txt)
+Pipfile
+Pipfile.lock
+
+# 🔹 IDE/editor config files
+.vscode/
+.idea/
+*.iml
+*.sublime-project
+*.sublime-workspace
+
+# 🔹 OS-specific files
+.DS_Store
+Thumbs.db
+
+# 🔹 Flask-specific files
+instance/
+*.sqlite3
+*.db
+*.sqlite
+
+# 🔹 Frontend (if using Node.js)
+node_modules/
+package-lock.json
+yarn.lock
+
+# 🔹 Coverage reports
+.coverage
+htmlcov/
+*.cover
+*.lcov
+nosetests.xml
+
+# 🔹 Docker (if applicable)
+docker-compose.override.yml
