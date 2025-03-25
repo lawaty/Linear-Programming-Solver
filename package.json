@@ -1,7 +1,7 @@
 {
   "name": "lp-solver-client",
   "version": "1.0.0",
-  "description": "",
+  "description": "A linear programming solver client with an Electron frontend and Flask backend.",
   "main": "entry.js",
   "scripts": {
     "start": "electron .",
@@ -10,40 +10,58 @@
     "build-windows": "electron-builder --win",
     "build-mac": "electron-builder --mac"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "electron",
+    "flask",
+    "linear-programming",
+    "solver"
+  ],
+  "author": "Abdelrahman El-Lawaty",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
     "electron": "^35.0.3",
     "electron-builder": "^25.1.8"
   },
+  "dependencies": {
+    "jquery": "^3.6.0",
+    "bootstrap": "^5.3.0"
+  },
   "build": {
-    "appId": "com.levi-client.app",
-    "productName": "Levi Client v1",
+    "appId": "com.lp-client.app",
+    "productName": "Linear Programming Solver Client",
     "directories": {
       "output": "dist"
     },
     "files": [
-      "src/**/*",
-      "app/**/*"
+      "core/*",
+      "www/**/*",
+      "entry.js"
     ],
     "extraFiles": [
       {
-        "from": "app",
-        "to": "app",
+        "from": "server",
+        "to": "server",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "python_env",
+        "to": "python_env",
         "filter": [
           "**/*"
         ]
       }
     ],
-    "asar": true,
+    "asar": false,
     "linux": {
       "target": [
         "AppImage",
         "deb",
         "tar.gz"
-      ]
+      ],
+      "category": "Utility"
     },
     "win": {
       "target": [
