@@ -1,10 +1,10 @@
-🟦 **Linear Programming Solver**  
+### 🟦 **Linear Programming Solver**  
 🖥️ *Electron-based Client + Python Flask Backend*  
 
 ---
 
 ## 🏗️ **Project Structure**  
-📂 **lp-solver-client/**  
+📂 **LP-Solver-App-Root/**  
 📁 `core/` - Core logic for the Electron app  
 📁 `server/` - Python Flask backend  
 &nbsp;&nbsp;&nbsp;&nbsp;📂 `api/` - API route definitions  
@@ -16,8 +16,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;📄 `GoalProgramming.py` - Goal Programming solver  
 &nbsp;&nbsp;&nbsp;&nbsp;📂 `venv/` - Python virtual environment  
 &nbsp;&nbsp;&nbsp;&nbsp;📄 `app.py` - Flask application entry point  
-&nbsp;&nbsp;&nbsp;&nbsp;📄 `install_dep.sh` - Python dependencies setup  
-📁 `www/` - Frontend (HTML, jQuery, Bootstrap)  
+&nbsp;&nbsp;&nbsp;&nbsp;📄 `install.sh` - Unified installation script  
+📁 `www/` - Frontend (HTML, jQuery, Tailwind CSS)  
 📄 `entry.js` - Electron main process entry point  
 📄 `preload.js` - Electron preload script  
 📄 `package.json` - Electron dependencies & scripts  
@@ -36,9 +36,15 @@
 ### 📦 **2. Install Dependencies**  
 Run the **setup script** to install both **Electron and Python dependencies** in one step:  
 
+#### 🖥️ **Linux/macOS (Bash)**
 ```sh
 chmod +x install.sh  # Only needed once
 ./install.sh
+```
+
+#### 🪟 **Windows (PowerShell)**
+```powershell
+bash install.sh
 ```
 
 ✅ **This script will:**  
@@ -87,4 +93,5 @@ For specific platforms:
 
 📌 **Notes:**  
 ✔ The **packaged app includes Flask**, so no extra setup is needed after building.  
-✔ If you encounter permission issues, try `sudo ./install.sh`.  
+✔ If you encounter permission issues on Linux/macOS, try `sudo ./install.sh`.  
+✔ On **Windows**, run `bash install.sh` in **Git Bash, WSL, or Cygwin**.
