@@ -7,24 +7,16 @@ class Solver:
         self.rhs = np.array(rhs, dtype=float)
         self.num_variables = num_variables
         self.tableau = self._initialize_tableau()
+        self.history = [] 
+        self._store_tableau() 
         
     def _initialize_tableau(self):
-        """Tableau has an extra raw for the obj. function and columns = #variables + #slack variables + 1 (RHS)
-        """
-
-        rows, cols = self.constraints.shape
-        tableau = np.zeros((rows + 1, cols + rows + 1))
+        """To be overriden in subclasses"""
+        pass
+    
+    def _store_tableau(self):
+        self.history.append(self.tableau.copy().tolist())
         
-        # Constraints Rows
-        tableau[:-1, :cols] = self.constraints # DV Cells
-        tableau[:-1, cols:cols + rows] = np.eye(rows) # Slack Cells
-        tableau[:-1, -1] = self.rhs
-
-        # Obj. Fun in the standard form (Last Row)
-        print(tableau[-1, :cols], -self.objective)
-        tableau[-1, :cols] = -self.objective  # Objective function
-        return tableau
-
     def _get_pivot_column(self):
         return np.argmin(self.tableau[-1, :-1])
     
