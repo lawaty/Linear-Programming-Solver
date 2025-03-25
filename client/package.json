@@ -1,0 +1,61 @@
+{
+  "name": "lp-solver-client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "entry.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build-linux": "electron-builder --linux",
+    "build-windows": "electron-builder --win",
+    "build-mac": "electron-builder --mac"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "electron": "^35.0.3",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.levi-client.app",
+    "productName": "Levi Client v1",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "app/**/*"
+    ],
+    "extraFiles": [
+      {
+        "from": "app",
+        "to": "app",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "asar": true,
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb",
+        "tar.gz"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    }
+  }
+}
