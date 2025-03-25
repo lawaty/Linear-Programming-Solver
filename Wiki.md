@@ -85,18 +85,6 @@ For specific platforms:
 
 ---
 
-## 🤝 **Contributing**  
-🔹 **Fork** the repository  
-🔹 Create a **new branch** (`feature-branch`)  
-🔹 **Commit** your changes  
-🔹 **Push** & create a **Pull Request**  
-
----
-
 📌 **Notes:**  
 ✔ The **packaged app includes Flask**, so no extra setup is needed after building.  
 ✔ If you encounter permission issues, try `sudo ./install.sh`.  
-
----
-
-This **canvas format** makes it **clearer and more visually appealing**. 🚀 Let me know if you need any refinements!
