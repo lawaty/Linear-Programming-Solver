@@ -8,32 +8,38 @@ from core.interfaces import SimplexSolver, BigMSolver, TwoPhaseSolver, GoalProgr
 # Create Blueprint
 api_blueprint = Blueprint("api", __name__)
 
-# Directly instantiate solvers, ensuring they implement the interfaces
-simplex_solver: SimplexSolver = Simplex()
-big_m_solver: BigMSolver = BigM()
-two_phase_solver: TwoPhaseSolver = TwoPhase()
-goal_solver: GoalProgrammingSolver = GoalProgramming()
-
 @api_blueprint.route("/solve/simplex", methods=["POST"])
 def solve_simplex():
     data = request.json
+    simplex_solver = Simplex(
+        data["objective"], data["constraints"], data["rhs"], len(data["objective"])
+    )
     result = simplex_solver.solve(data)
     return jsonify(result)
 
 @api_blueprint.route("/solve/big-m", methods=["POST"])
 def solve_big_m():
     data = request.json
+    big_m_solver = BigM(
+        data["objective"], data["constraints"], data["rhs"], len(data["objective"])
+    )
     result = big_m_solver.solve(data)
     return jsonify(result)
 
 @api_blueprint.route("/solve/two-phase", methods=["POST"])
 def solve_two_phase():
     data = request.json
+    two_phase_solver = TwoPhase(
+        data["objective"], data["constraints"], data["rhs"], len(data["objective"])
+    )
     result = two_phase_solver.solve(data)
     return jsonify(result)
 
 @api_blueprint.route("/solve/goal-programming", methods=["POST"])
 def solve_goal():
     data = request.json
+    goal_solver = GoalProgramming(
+        data["objective"], data["constraints"], data["rhs"], len(data["objective"])
+    )
     result = goal_solver.solve(data)
     return jsonify(result)
