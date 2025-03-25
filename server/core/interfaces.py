@@ -1,21 +1,10 @@
 from abc import ABC, abstractmethod
 
-class SimplexSolver(ABC):
+class ISolver(ABC):
     @abstractmethod
-    def solve(self, data):
+    def __init__(self, objective, constraints, rhs, num_variables):
         pass
 
-class BigMSolver(ABC):
     @abstractmethod
-    def solve(self, data):
-        pass
-
-class TwoPhaseSolver(ABC):
-    @abstractmethod
-    def solve(self, data):
-        pass
-
-class GoalProgrammingSolver(ABC):
-    @abstractmethod
-    def solve(self, data):
+    def solve(self):
         pass

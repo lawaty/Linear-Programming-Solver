@@ -24,17 +24,18 @@
 
     <div class="mb-3">
       <label for="objective" class="form-label">Objective Coefficients (comma-separated):</label>
-      <input type="text" class="form-control" id="objective" placeholder="e.g., 3, 2">
+      <input type="text" class="form-control" id="objective" value="3, 2">
     </div>
 
     <div class="mb-3">
       <label for="constraints" class="form-label">Constraints (each row comma-separated, new line for next constraint):</label>
-      <textarea class="form-control" id="constraints" rows="3" placeholder="e.g., 2,1,<=,8\n1,2,<=,6"></textarea>
+      <textarea class="form-control" id="constraints" rows="3" value="">2,1,<=,8
+        1,2,<=,6</textarea>
     </div>
 
     <div class="mb-3">
       <label for="rhs" class="form-label">Right-Hand Side (comma-separated):</label>
-      <input type="text" class="form-control" id="rhs" placeholder="e.g., 8, 6">
+      <input type="text" class="form-control" id="rhs" value="8, 6">
     </div>
 
     <button class="btn btn-primary" id="solveBtn">Solve</button>
