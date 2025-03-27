@@ -7,6 +7,8 @@ class Solver:
         self.rhs = np.array(rhs, dtype=float)
         self.num_variables = num_variables
         self.tableau = self._initialize_tableau()
+        if isinstance(self.tableau, tuple) and len(self.tableau) == 2:
+            self.tableau, self.artificial = self.tableau 
         self.history = [] 
         self._store_tableau() 
         
