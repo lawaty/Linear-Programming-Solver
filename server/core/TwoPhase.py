@@ -1,6 +1,5 @@
-<<<<<<< HEAD
-from .interfaces import ISolver
-from .Solver import Solver
+from core.interfaces import ISolver
+from core.Solver import Solver
 import numpy as np
 
 class TwoPhase(Solver, ISolver):
@@ -101,9 +100,3 @@ if __name__ == "__main__":
     print("Optimal Solution:", result["solution"])
     print("Optimal Value:", result["optimal_value"])
     # print("History of Tableaus:\n", result["history"])
-=======
-class TwoPhase():
-    def solve(self, data):
-        # TODO: Implement Two-Phase Method
-        return {"message": "Two-Phase solution coming soon!"}
->>>>>>> ffebe321a86e456fe1924452faf8e55140507330

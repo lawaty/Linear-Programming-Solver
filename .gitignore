@@ -49,5 +49,10 @@ htmlcov/
 *.lcov
 nosetests.xml
 
+
+server/core/backup.py
+server/core/exp.py
+server/core/*backup*
+
 # 🔹 Docker (if applicable)
 docker-compose.override.yml
