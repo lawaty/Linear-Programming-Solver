@@ -1,8 +1,7 @@
-from core.interfaces import ISolver
 from core.Solver import Solver
 import numpy as np
 
-class GoalProgramming(Solver, ISolver):
+class GoalProgramming(Solver):
     def __init__(self, objective, constraints, rhs, num_variables):
         super().__init__(objective, constraints, rhs, num_variables)
         self.priorities = list(range(1 , num_variables+1))  # Priorities for preemptive goal programming

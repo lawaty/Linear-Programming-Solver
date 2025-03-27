@@ -1,8 +1,7 @@
-from core.interfaces import ISolver
 from core.Solver import Solver
 import numpy as np
 
-class TwoPhase(Solver, ISolver):
+class TwoPhase(Solver):
     def __init__(self, objective, constraints, rhs, num_variables , constraints_type):
         self.constraints_type = constraints_type
         super().__init__(objective, constraints, rhs, num_variables)
