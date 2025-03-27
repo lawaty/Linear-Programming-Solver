@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from .interfaces import ISolver
 from .Solver import Solver
 import numpy as np
@@ -54,3 +55,10 @@ if __name__ == "__main__":
     print("Optimal Solution:", result["solution"])
     print("Optimal Value:", result["optimal_value"])
     # print("History of Tableaus:\n", result["history"])
+=======
+
+class GoalProgramming():
+    def solve(self, data):
+        # TODO: Implement Goal Programming
+        return {"message": "Goal Programming solution coming soon!"}
+>>>>>>> ffebe321a86e456fe1924452faf8e55140507330

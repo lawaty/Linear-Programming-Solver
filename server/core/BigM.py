@@ -1,8 +1,7 @@
-from .interfaces import ISolver
-from .Solver import Solver
+from core.Solver import Solver
 import numpy as np
 
-class BigM(Solver, ISolver):
+class BigM(Solver):
     def __init__(self, objective, constraints, rhs, num_variables , constraints_type):
         self.M = 1e6  # Large M value
         self.constraints_type = constraints_type

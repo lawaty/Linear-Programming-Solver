@@ -1,8 +1,12 @@
+<<<<<<< HEAD
 from .interfaces import ISolver
 from .Solver import Solver
+=======
+from core.Solver import Solver
+>>>>>>> ffebe321a86e456fe1924452faf8e55140507330
 import numpy as np
 
-class Simplex(Solver, ISolver):
+class Simplex(Solver):
     def __init__(self, objective, constraints, rhs, num_variables):
         super().__init__(objective, constraints, rhs, num_variables)
 
