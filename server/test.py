@@ -127,10 +127,11 @@ def test_two_phase1():
         [5, 4],
         [-1, -2]
     ])
+    constraints_type = ['<=', '<=', '<=', '>=']
     rhs = np.array([600, 225, 1000, -150])
     num_variables = 2
 
-    two_phase_solver = TwoPhase(objective, constraints, rhs, num_variables)
+    two_phase_solver = TwoPhase(objective, constraints, rhs, num_variables, constraints_type)
     result = two_phase_solver.solve()
 
     assert result["optimal_value"] == pytest.approx(900)
@@ -149,8 +150,9 @@ def test_two_phase2():
     ])
     rhs = np.array([6, -2])
     num_variables = 2
+    constraints_type = ['<=', '>=']
 
-    two_phase_solver = TwoPhase(objective, constraints, rhs, num_variables)
+    two_phase_solver = TwoPhase(objective, constraints, rhs, num_variables, constraints_type)
     result = two_phase_solver.solve()
 
     assert result["optimal_value"] == pytest.approx(7.5)
@@ -168,10 +170,11 @@ def test_two_phase3():
         [1, 0, 1],
         [0, 1, 1]
     ])
+    constraints_type = ['<=', '=', '>=']
     rhs = np.array([20, 5, 10])
     num_variables = 3
 
-    two_phase_solver = TwoPhase(objective, constraints, rhs, num_variables)
+    two_phase_solver = TwoPhase(objective, constraints, rhs, num_variables , constraints_type)
     result = two_phase_solver.solve()
 
     assert result["optimal_value"] == pytest.approx(10)
