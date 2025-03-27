@@ -1,8 +1,8 @@
 import numpy as np
-from .Simplex import Simplex
-from .BigM import BigM
-from .TwoPhase import TwoPhase
-from .GoalProgramming import GoalProgramming
+from core.Simplex import Simplex
+from core.BigM import BigM
+from core.TwoPhase import TwoPhase
+from core.GoalProgramming import GoalProgramming
 import pytest
 
 def test_simplex1():
