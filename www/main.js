@@ -11,6 +11,9 @@ $(document).ready(() => {
       let parts = row.split(",");
       let typeIndex = parts.findIndex(val => val === "<=" || val === ">=" || val === "="); // Find the constraint type index
 
+      if(method == 'simplex' && parts.includes('>='))
+        alert('simplex cannot solve constraints with ">=" sign')
+
       if (typeIndex !== -1) {
         constraints_type.push(parts[typeIndex]); // Store constraint type
         rhs.push(Number(parts[parts.length - 1])); // Extract the RHS value (last item)
