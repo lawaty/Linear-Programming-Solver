@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from core.Simplex import Simplex
 from core.BigM import BigM
-# from core.TwoPhase import TwoPhase
+from core.TwoPhase import TwoPhase
 # from core.GoalProgramming import GoalProgramming
 
 # Create Blueprint
@@ -26,14 +26,14 @@ def solve_big_m():
     result = big_m_solver.solve()
     return jsonify(result)
 
-# @api_blueprint.route("/solve/two-phase", methods=["POST"])
-# def solve_two_phase():
-#     data = request.json
-#     two_phase_solver = TwoPhase(
-#         data["objective"], data["constraints"], data["rhs"], len(data["objective"])
-#     )
-#     result = two_phase_solver.solve()
-#     return jsonify(result)
+@api_blueprint.route("/solve/two-phase", methods=["POST"])
+def solve_two_phase():
+    data = request.json
+    two_phase_solver = TwoPhase(
+        data["objective"], data["constraints"], data["rhs"], len(data["objective"]), data['constraints_type']
+    )
+    result = two_phase_solver.solve()
+    return jsonify(result)
 
 # @api_blueprint.route("/solve/goal-programming", methods=["POST"])
 # def solve_goal():
