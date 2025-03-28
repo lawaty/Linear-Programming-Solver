@@ -47,8 +47,8 @@
         ]
       },
       {
-        "from": "python_env",
-        "to": "python_env",
+        "from": "www",
+        "to": "www",
         "filter": [
           "**/*"
         ]

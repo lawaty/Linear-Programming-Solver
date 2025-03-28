@@ -9,6 +9,14 @@ set -e
 echo "📦 Installing Electron dependencies..."
 npm install
 
+# Install electron-builder as a dev dependency (project-local)
+if [ ! -d "node_modules/electron-builder" ]; then
+  echo "🔧 Installing electron-builder locally..."
+  npm install --save-dev electron-builder
+else
+  echo "⚡ electron-builder is already installed."
+fi
+
 # Set up Python virtual environment
 echo "🐍 Setting up Python virtual environment..."
 cd server

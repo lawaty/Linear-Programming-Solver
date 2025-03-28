@@ -36,14 +36,14 @@ const AppManager = {
     // Adjust the Python executable path for different platforms
     const pythonExecutable = isPackaged
       ? process.platform === "win32"
-        ? path.join(process.resourcesPath, "python_env", "Scripts", "python.exe") // Windows
-        : path.join(process.resourcesPath, "python_env", "bin", "python3") // Linux/Mac
+        ? path.join(process.resourcesPath,  "..", "server", "venv", "Scripts", "python.exe") // Windows
+        : path.join(process.resourcesPath, "..", "server", "venv", "bin", "python3") // Linux/Mac
       : process.platform === "win32"
         ? path.join(__dirname, "..", "server", "venv", "Scripts", "python.exe") // Dev Windows
         : path.join(__dirname, "..", "server", "venv", "bin", "python3"); // Dev Linux/Mac
 
     const serverScript = isPackaged
-      ? path.join(process.resourcesPath, "server", "app.py") // Packaged mode
+      ? path.join(process.resourcesPath, "..", "server", "app.py") // Packaged mode
       : path.join(__dirname, "..", "server", "app.py"); // Development mode
 
     console.log(`Starting Flask server with: ${pythonExecutable} ${serverScript}`);
@@ -85,7 +85,7 @@ const AppManager = {
     this.__main_window.maximize();
 
     const appPath = app.isPackaged
-      ? path.join(process.resourcesPath, "www", "index.html") // Packaged mode
+      ? path.join(process.resourcesPath, "..", "www", "index.html") // Packaged mode
       : path.join(__dirname, "..", "www", "index.html"); // Development mode
 
     this.__main_window.loadFile(appPath).catch((err) => {
