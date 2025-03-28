@@ -29,6 +29,7 @@ class Simplex(Solver):
             pivot_row = self._get_pivot_row(pivot_col)
             self._apply_gauss(pivot_row, pivot_col)
             self._store_tableau()  # Store tableau after each iteration
+            print(self.tableau , "\n")
 
         solution, optimal_value = self._extract_solution()
         return {"solution": solution.tolist(), "optimal_value": optimal_value, "history": self.history}

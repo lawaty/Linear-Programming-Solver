@@ -1,4 +1,5 @@
 from core.Solver import Solver
+# from Solver import Solver
 import numpy as np
 
 class BigM(Solver):
@@ -75,31 +76,36 @@ class BigM(Solver):
             self._apply_gauss(pivot_row, pivot_col)
             self._store_tableau()
         
+        print("final tableau :")
+        print(self.tableau.astype(int))
         solution, optimal_value = self._extract_solution()
         return {"solution": solution.tolist(), "optimal_value": optimal_value, "history": self.history}
 
 
 if __name__ == "__main__":
-    # Example problem: Maximize z = 3x + 4y
+    # Example problem: Maximize z = x1 -x2 + 3x3
     # Subject to:
-    # 2x + y <= 600
-    # x  + y <= 225
-    # 5x + 4y <= 1000
-    # x + 2y >= 150
-    objective = np.array([3, 4])
+    # x1 + x2 <= 20
+    # x1 + x3 = 5
+    # x2 + x3 >= 10
+    objective = np.array([1, -1, 3])
     constraints = np.array([
-        [2, 1],
-        [1, 1],
-        [5, 4],
-        [1, 2]
+        [1, 1, 0],
+        [1, 0, 1],
+        [0, 1, 1]
     ])
-    rhs = np.array([600, 225, 1000, 150])
-    constraints_type = ['<=', '<=', '<=', '>=']
-    num_variables = 2
+    constraints_type = ['<=', '=', '>=']
+    rhs = np.array([20, 5, 10])
+    num_variables = 3
 
-    bigm_solver = BigM(objective, constraints, rhs, num_variables , constraints_type)
-    result = bigm_solver.solve()
+    bigM_solver = BigM(objective, constraints, rhs, num_variables , constraints_type)
+    result = bigM_solver.solve()
+    try:
+        print("Optimal Solution:", result["solution"])
+        print("Optimal Value:", result["optimal_value"])
+    except:
+        print(result["message"])
 
-    print("Optimal Solution:", result["solution"])
-    print("Optimal Value:", result["optimal_value"])
+    # print("Optimal Solution:", result["solution"])
+    # print("Optimal Value:", result["optimal_value"])
     # print("History of Tableaus:\n", result["history"])

@@ -125,7 +125,7 @@ def test_two_phase1():
         [2, 1],
         [1, 1],
         [5, 4],
-        [-1, -2]
+        [1, 2]
     ])
     constraints_type = ['<=', '<=', '<=', '>=']
     rhs = np.array([600, 225, 1000, -150])
@@ -146,9 +146,9 @@ def test_two_phase2():
     objective = np.array([1, 5])
     constraints = np.array([
         [3, 4],
-        [-1, -3]
+        [1, 3]
     ])
-    rhs = np.array([6, -2])
+    rhs = np.array([6, 2])
     num_variables = 2
     constraints_type = ['<=', '>=']
 

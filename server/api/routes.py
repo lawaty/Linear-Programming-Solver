@@ -3,7 +3,6 @@ from core.Simplex import Simplex
 from core.BigM import BigM
 # from core.TwoPhase import TwoPhase
 # from core.GoalProgramming import GoalProgramming
-from core.interfaces import ISolver
 
 # Create Blueprint
 api_blueprint = Blueprint("api", __name__)
