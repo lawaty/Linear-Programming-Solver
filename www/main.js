@@ -1,18 +1,31 @@
-$(document).ready(function () {
-  $("#solveBtn").click(function () {
+$(document).ready(() => {
+  $("#solveBtn").on('click', function () {
     let method = $("#lpMethod").val();
-    let objective = [...$("#objective").val().split(",").map(Number), 0];
+    let objective = $("#objective").val().split(",").map(Number);
 
-    let constraints = $("#constraints").val().split("\n").map(row => {
-      return row.split(",").filter(val => val !== "<=" && val !== ">=").map(Number);
+    let constraints_type = [];
+    let constraints = [];
+    let rhs = [];
+
+    $("#constraints").val().split("\n").forEach(row => {
+      let parts = row.split(",");
+      let typeIndex = parts.findIndex(val => val === "<=" || val === ">=" || val === "="); // Find the constraint type index
+
+      if (typeIndex !== -1) {
+        constraints_type.push(parts[typeIndex]); // Store constraint type
+        rhs.push(Number(parts[parts.length - 1])); // Extract the RHS value (last item)
+
+        // Extract constraint coefficients (excluding type and RHS)
+        let coeffs = parts.slice(0, typeIndex).map(Number);
+        constraints.push(coeffs);
+      }
     });
-
-    let rhs = $("#rhs").val().split(",").map(Number);
 
     let jsonData = {
       "objective": objective,
       "constraints": constraints,
-      "rhs": rhs
+      "rhs": rhs,
+      "constraints_type": constraints_type
     };
 
     $.ajax({
@@ -22,7 +35,7 @@ $(document).ready(function () {
       data: JSON.stringify(jsonData),
       success: function (response) {
         console.log(response);
-        $("#output").html(""); // Clear previous output
+        $("#output").html("");
 
         // Display history as Bootstrap tables
         response.history.forEach((table, index) => {

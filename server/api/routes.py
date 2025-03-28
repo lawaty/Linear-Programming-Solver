@@ -21,7 +21,7 @@ def solve_simplex():
 def solve_big_m():
     data = request.json
     big_m_solver = BigM(
-        data["objective"], data["constraints"], data["rhs"], len(data["objective"])
+        data["objective"], data["constraints"], data["rhs"], len(data["objective"]), data['constraints_type']
     )
     result = big_m_solver.solve()
     return jsonify(result)
