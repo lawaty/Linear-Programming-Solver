@@ -23,12 +23,12 @@ class BigM(Solver):
         # Identify artificial and surplus variables and modify constraints accordingly
         artificial_idx = cols + num_slacks
         surplus_idx = cols + num_slacks + num_artificial
-        artificial_vars = []
+        self.artificial_vars = []
         artificial_rows = []
         for i , type in zip(range(len(self.rhs)) , self.constraints_type):
             if type == '=':  # Handle equality constraints
                 tableau[i, artificial_idx] = 1  # Add artificial variable
-                artificial_vars.append(artificial_idx)
+                self.artificial_vars.append(artificial_idx)
                 artificial_rows.append(i)
                 artificial_idx += 1
         
@@ -37,23 +37,17 @@ class BigM(Solver):
                 tableau[i, surplus_idx] = -1  # Add surplus variable
                 surplus_idx += 1
                 tableau[i, artificial_idx] = 1  # Add artificial variable
-                artificial_vars.append(artificial_idx)
+                self.artificial_vars.append(artificial_idx)
                 artificial_rows.append(i)
                 artificial_idx += 1
 
         tableau[-1, :cols] = -self.objective  # Standard objective
-        tableau[-1, artificial_vars] = self.M  # Penalize artificial variables
+        tableau[-1, self.artificial_vars] = self.M  # Penalize artificial variables
         for row in artificial_rows:
             tableau[-1, :] -= self.M * tableau[row , :]  # Penalize artificial variables
         
         return tableau
     
-    def _is_equality_constraint(self, rhs_value):
-        """Helper function to check if a constraint is an equality."""
-    # Add logic to identify equality constraints (e.g., based on input format)
-        if isinstance(rhs_value, str):
-            return True
-        return False  # Placeholder: Replace with actual condition
     
     def solve(self):
         """Implements the Big-M method using the base Solver utilities."""
@@ -63,30 +57,34 @@ class BigM(Solver):
             self._apply_gauss(pivot_row, pivot_col)
             self._store_tableau()
         
+         # Check for infeasibility
+        artificial_values = self.tableau[:-1, self.artificial_vars]
+        if any(artificial_values[:, -1] > 0):  # Check if any artificial variable is non-zero
+            print("artificial vars = ", self.artificial_vars)
+            print(self.tableau.astype(int))
+            return {"feasible" : False , "solution": None, "optimal_value": None, "history": self.history}
+        
         solution, optimal_value = self._extract_solution()
-        return {"solution": solution.tolist(), "optimal_value": optimal_value, "history": self.history}
+        return {"feasible" : True ,"solution": solution.tolist(), "optimal_value": optimal_value, "history": self.history}
 
 
 if __name__ == "__main__":
-    # Example problem: Maximize z = x1 -x2 + 3x3
+   # Example problem: Maximize z = 3x1 + 2x2
     # Subject to:
-    # x1 + x2 <= 20
-    # x1 + x3 = 5
-    # x2 + x3 >= 10
-    objective = np.array([1, -1, 3])
+    # x1 + x2 <= 2
+    # 2x1 + 2x2 >= 6
+    objective = np.array([3, 2])
     constraints = np.array([
-        [1, 1, 0],
-        [1, 0, 1],
-        [0, 1, 1]
+        [1, 1],
+        [2, 2]
     ])
-    constraints_type = ['<=', '=', '>=']
-    rhs = np.array([20, 5, 10])
-    num_variables = 3
+    constraints_type = ['<=', '>=']
+    rhs = np.array([2, 6])
+    num_variables = 2
 
-    bigM_solver = BigM(objective, constraints, rhs, num_variables , constraints_type)
-    result = bigM_solver.solve()
-    try:
-        print("Optimal Solution:", result["solution"])
-        print("Optimal Value:", result["optimal_value"])
-    except:
-        print(result["message"])
+    bigm_solver = BigM(objective, constraints, rhs, num_variables, constraints_type)
+    result = bigm_solver.solve()
+
+    print("Optimal Solution:", result["solution"])
+    print("Optimal Value:", result["optimal_value"])
+   

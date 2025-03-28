@@ -66,7 +66,7 @@ class TwoPhase(Solver):
             self._apply_gauss(pivot_row, pivot_col)
             self._store_tableau()
         if any(self.tableau[-1, :-1] < 0):
-            return {"message": "Infeasible solution"}
+            return {"feasible" : False , "solution": None, "optimal_value": None, "history": self.history}
         
         self.tableau = np.delete(self.tableau, artificial_vars, axis=1)
         # Phase 2: Solve original objective
@@ -75,9 +75,6 @@ class TwoPhase(Solver):
         # # Remove artificial columns from tableau
 
         
-        print("original objective:")
-        print(self.tableau)
-        print()
 
         for basic_var in self.vars_on_left:
             pivot_row = np.where(self.vars_on_left == basic_var)[0][0]  # Find the row index of the basic variable
@@ -94,7 +91,7 @@ class TwoPhase(Solver):
 
         
         solution, optimal_value = self._extract_solution()
-        return {"solution": solution.tolist(), "optimal_value": optimal_value, "history": self.history}
+        return {"feasible" : True ,"solution": solution.tolist(), "optimal_value": optimal_value, "history": self.history}
 
 if __name__ == "__main__":
    # Example problem: Maximize z = x1 -x2 + 3x3
@@ -114,9 +111,5 @@ if __name__ == "__main__":
 
     two_phase_solver = TwoPhase(objective, constraints, rhs, num_variables , constraints_type)
     result = two_phase_solver.solve()
-    try:
-        print("Optimal Solution:", result["solution"])
-        print("Optimal Value:", result["optimal_value"])
-    except:
-        print(result["message"])
-    # print("History of Tableaus:\n", result["history"])
+    print("Optimal Solution:", result["solution"])
+    print("Optimal Value:", result["optimal_value"])
