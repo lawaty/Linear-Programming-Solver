@@ -24,22 +24,25 @@ class Simplex(Solver):
 
     def solve(self):
         """Implements the simplex algorithm using the base Solver utilities."""
+        if not self._is_feasible(self.tableau):
+            return {"feasible" : False , "solution": None, "optimal_value": None, "history": self.history}
         while not self._is_optimal():
             pivot_col = self._get_pivot_column()
             pivot_row = self._get_pivot_row(pivot_col)
             self._apply_gauss(pivot_row, pivot_col)
             self._store_tableau()  # Store tableau after each iteration
-            print(self.tableau , "\n")
 
         solution, optimal_value = self._extract_solution()
-        return {"solution": solution.tolist(), "optimal_value": optimal_value, "history": self.history}
+        return {"feasible" : True ,"solution": solution.tolist(), "optimal_value": optimal_value, "history": self.history}
 
+    def _is_feasible(self, tableau):
+        """Checks if the initial tableau is feasible."""
+        return np.all(tableau[:-1, -1] >= 0)  # All RHS values must be non-negative
 if __name__ == "__main__":
     # Example problem: Maximize z = 3x + 5y
     # Subject to:
     # 2x + y <= 6
     # x + 2y <= 6
-    # x, y >= 0
 
     objective = np.array([3, 5])
     constraints = np.array([
