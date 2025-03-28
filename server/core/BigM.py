@@ -13,14 +13,12 @@ class BigM(Solver):
         num_artificial = sum(1 for type in self.constraints_type if type in ['=' , '>='])  # Count artificial variables
         num_surplus = sum(1 for type in self.constraints_type if type == '>=')  # Count surplus variables
         num_slacks = sum(1 for type in self.constraints_type if type == '<=' )  # Count slack variables
-        # print(f"rows = {rows}, cols = {cols}, num_slacks = {num_slacks}, num_surplus = {num_surplus}, num_artificial = {num_artificial}")
         tableau = np.zeros((rows + 1, cols + num_slacks + num_surplus + num_artificial + 1))
         
         # Constraints Rows
         tableau[:-1, :cols] = self.constraints  # Decision variables
         tableau[:-1, cols:cols + rows] = np.eye(rows)  # Slack variables
         tableau[:-1, -1] = self.rhs  # RHS column
-        # print(tableau)
         
         # Identify artificial and surplus variables and modify constraints accordingly
         artificial_idx = cols + num_slacks
@@ -35,30 +33,19 @@ class BigM(Solver):
                 artificial_idx += 1
         
             elif type == '>=':  # ##Flip inequality## for >= constraints
-                # tableau[i, :cols] *= -1
                 
-                # tableau[i, cols:cols + rows] *= -1
-                print(f"i = {i} , surplus_idx = {surplus_idx} , tableau[i] = {tableau[i]}")
                 tableau[i, surplus_idx] = -1  # Add surplus variable
-                # print(tableau)
                 surplus_idx += 1
                 tableau[i, artificial_idx] = 1  # Add artificial variable
                 artificial_vars.append(artificial_idx)
                 artificial_rows.append(i)
                 artificial_idx += 1
 
-        # print()
-        # print(tableau.astype(int))
-        # Objective function row
         tableau[-1, :cols] = -self.objective  # Standard objective
         tableau[-1, artificial_vars] = self.M  # Penalize artificial variables
-        print()
-        print(tableau.astype(int))
         for row in artificial_rows:
             tableau[-1, :] -= self.M * tableau[row , :]  # Penalize artificial variables
         
-        # print()
-        # print(tableau.astype(int))
         return tableau
     
     def _is_equality_constraint(self, rhs_value):
@@ -76,8 +63,6 @@ class BigM(Solver):
             self._apply_gauss(pivot_row, pivot_col)
             self._store_tableau()
         
-        print("final tableau :")
-        print(self.tableau.astype(int))
         solution, optimal_value = self._extract_solution()
         return {"solution": solution.tolist(), "optimal_value": optimal_value, "history": self.history}
 
@@ -105,7 +90,3 @@ if __name__ == "__main__":
         print("Optimal Value:", result["optimal_value"])
     except:
         print(result["message"])
-
-    # print("Optimal Solution:", result["solution"])
-    # print("Optimal Value:", result["optimal_value"])
-    # print("History of Tableaus:\n", result["history"])

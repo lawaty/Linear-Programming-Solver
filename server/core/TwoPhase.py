@@ -14,8 +14,6 @@ class TwoPhase(Solver):
         self.num_slacks = sum(1 for type in self.constraints_type if type == '<=' )  # Count slack variables
         tableau = np.zeros((rows + 1, self.cols + self.num_slacks+ self.num_slacks + self.num_artificial + 1))
         self.vars_on_left = np.arange(self.cols, self.cols + self.num_slacks + self.num_artificial)  # Slack variables + artificial variables
-        # print(f"num_slacks = {self.num_slacks} , num_surplus = {num_surplus} ,num_artificial = {self.num_artificial} ")
-        # print(f"vars_on_left = {self.vars_on_left}")
         # Constraints Rows
         tableau[:-1, :self.cols] = self.constraints  # Decision variables
         tableau[:-1, self.cols:self.cols + rows] = np.eye(rows)  # Slack variables
@@ -35,24 +33,15 @@ class TwoPhase(Solver):
                 artificial_idx += 1
         
             elif type == '>=':  # ##Flip inequality## for >= constraints
-                # tableau[i, :self.cols] *= -1
-                
-                # tableau[i, self.cols:self.cols + rows] *= -1
-                # print(f"i = {i} , surplus_idx = {surplus_idx} , tableau[i] = {tableau[i]}")
                 tableau[i, surplus_idx] = -1  # Add surplus variable
                 surplus_vars.append(surplus_idx)
-                # print(tableau)
                 surplus_idx += 1
                 tableau[i, artificial_idx] = 1  # Add artificial variable
                 artificial_vars.append(artificial_idx)
                 self.artificial_rows.append(i)
                 artificial_idx += 1
         
-        # print(tableau , "\n")
-        # print(f"artificial_vars = {artificial_vars} , surplus_vars = {surplus_vars}")
-        # Phase 1 Objective function row
         tableau[-1, :] = 0
-        # tableau[-1, :self.cols] = -self.objective
         for idx in artificial_vars:
             tableau[-1, idx] = -1
         for row in self.artificial_rows:
@@ -66,9 +55,7 @@ class TwoPhase(Solver):
         # Phase 1: Solve to remove artificial variables
         self.tableau, artificial_vars = self._initialize_tableau()
         self._store_tableau()
-        # print(self.tableau , "\n")
         artificials_exist = set(self.artificial_rows)
-        # print(f"vars_on_left = {self.vars_on_left}")
         while not self._is_optimal():
             pivot_col = self._get_pivot_column()
             pivot_row = self._get_pivot_row(pivot_col)
@@ -78,25 +65,10 @@ class TwoPhase(Solver):
                 artificials_exist.remove(pivot_row)
             self._apply_gauss(pivot_row, pivot_col)
             self._store_tableau()
-            # print(f"vars_on_left = {self.vars_on_left}")
-            # print(self.tableau)
-            # print(artificials_exist)
-        
-        # Check if artificial variables are eliminated
-        # if any(self.tableau[-1, idx] != 0 for idx in artificial_vars):
-            # return {"message": "Infeasible solution"}
-        # if len(artificials_exist) > 0:
-            # return {"message": "Infeasible solution"}
         if any(self.tableau[-1, :-1] < 0):
             return {"message": "Infeasible solution"}
         
-        # print("Phase 1 Complete")
-        # print(self.tableau)
-        # print()
-        # if self.tableau[-1,-1] == 0 :
-        # print(f"removing artifitial cols {artificial_vars}")
         self.tableau = np.delete(self.tableau, artificial_vars, axis=1)
-        # self.vars_on_left = [ (var - len(artificial_vars)) if var >= self.cols + self.num_slacks + self.num_artificial else var for var in self.vars_on_left  ]
         # Phase 2: Solve original objective
         self.tableau[-1, :] = 0
         self.tableau[-1, :self.num_variables] = -self.objective
@@ -107,15 +79,10 @@ class TwoPhase(Solver):
         print(self.tableau)
         print()
 
-        # print("simplex :")
-        # simplex_solver = Simplex(self.objective, self.tableau[:-1, :self.num_variables], self.tableau[:-1, -1], self.num_variables)
-        # result = simplex_solver.solve()
-        # print(f"vars_on_left = {self.vars_on_left}")
         for basic_var in self.vars_on_left:
             pivot_row = np.where(self.vars_on_left == basic_var)[0][0]  # Find the row index of the basic variable
             objective_coeff = self.tableau[-1 , basic_var]  # Get the original coefficient of the basic variable
             self.tableau[-1, :] -= objective_coeff * self.tableau[pivot_row, :]  # Zero out the basic variable in the objective row
-            # print(f"vars_on_left = {self.vars_on_left} , pivot_row = {pivot_row} , objective_coeff = {objective_coeff}")
         self._store_tableau()
 
         while not self._is_optimal():
@@ -126,21 +93,7 @@ class TwoPhase(Solver):
             print(self.tableau , "\n")
 
         
-        # print(f"vars_on_left = {self.vars_on_left}")
-        # for col in range(self.tableau.shape[1] - 1):
-        #     if col in self.vars_on_left:
-        #         continue
-        #     if self.tableau[-1, col] != 0:
-        #         pivot_row = self._get_pivot_row(col)
-        #         self._apply_gauss(pivot_row, col)
-        #         self._store_tableau()
-        #         print(self.tableau , "\n")
-        # self._store_tableau()
-        # print(self.tableau , "\n")
-        # print("Phase 2 Complete")
-        # print(self.tableau , "\n")
         solution, optimal_value = self._extract_solution()
-        # print(solution , optimal_value)
         return {"solution": solution.tolist(), "optimal_value": optimal_value, "history": self.history}
 
 if __name__ == "__main__":
