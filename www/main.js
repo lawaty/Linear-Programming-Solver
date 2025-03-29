@@ -11,7 +11,7 @@ $(document).ready(() => {
       let parts = row.split(",");
       let typeIndex = parts.findIndex(val => val === "<=" || val === ">=" || val === "="); // Find the constraint type index
 
-      if(method == 'simplex' && parts.includes('>='))
+      if (method == 'simplex' && parts.includes('>='))
         alert('simplex cannot solve constraints with ">=" sign')
 
       if (typeIndex !== -1) {
@@ -37,8 +37,17 @@ $(document).ready(() => {
       contentType: "application/json",
       data: JSON.stringify(jsonData),
       success: function (response) {
-        console.log(response);
         $("#output").html("");
+
+        // Display feasibility status
+        let feasibilityHtml = `
+      <h5>Solution Feasibility: 
+        <span class="badge ${response.feasible ? 'bg-success' : 'bg-danger'}">
+          ${response.feasible ? 'Feasible' : 'Infeasible'}
+        </span>
+      </h5>
+    `;
+        $("#output").append(feasibilityHtml);
 
         // Display history as Bootstrap tables
         response.history.forEach((table, index) => {
@@ -54,20 +63,24 @@ $(document).ready(() => {
           $("#output").append(tableHtml);
         });
 
-        // Display final solution
-        let solutionHtml = `
-          <h5>Optimal Solution</h5>
-          <table class="table table-bordered">
-            <tr><th>Variable</th><th>Value</th></tr>`;
-        response.solution.forEach((val, idx) => {
-          solutionHtml += `<tr><td>x${idx + 1}</td><td>${val.toFixed(2)}</td></tr>`;
-        });
-        solutionHtml += `
-            <tr><td><strong>Optimal Value</strong></td><td><strong>${response.optimal_value.toFixed(2)}</strong></td></tr>
-          </table>`;
-
-        $("#output").append(solutionHtml);
+        // Display final solution if feasible
+        if (response.feasible) {
+          let solutionHtml = `
+        <h5>Optimal Solution</h5>
+        <table class="table table-bordered">
+          <tr><th>Variable</th><th>Value</th></tr>`;
+          response.solution.forEach((val, idx) => {
+            solutionHtml += `<tr><td>x${idx + 1}</td><td>${val.toFixed(2)}</td></tr>`;
+          });
+          solutionHtml += `
+          <tr><td><strong>Optimal Value</strong></td><td><strong>${response.optimal_value.toFixed(2)}</strong></td></tr>
+        </table>`;
+          $("#output").append(solutionHtml);
+        } else {
+          $("#output").append("<p class='text-danger'>No feasible solution found.</p>");
+        }
       },
+
       error: function (xhr, status, error) {
         $("#output").text("Error: " + xhr.responseText);
       }

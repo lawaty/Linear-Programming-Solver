@@ -57,3 +57,5 @@ server/core/*backup*
 
 # 🔹 Docker (if applicable)
 docker-compose.override.yml
+
+dist

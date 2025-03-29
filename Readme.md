@@ -9,7 +9,7 @@
 📁 `server/` - Python Flask backend  
 &nbsp;&nbsp;&nbsp;&nbsp;📂 `api/` - API route definitions  
 &nbsp;&nbsp;&nbsp;&nbsp;📂 `core/` - LP-solving logic  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;📄 `interfaces.py` - Interfaces implemented by solvers  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;📄 `Solver.py` - Base Class implementes the common lienar algebra methods  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;📄 `Simplex.py` - Simplex method solver  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;📄 `BigM.py` - Big-M method solver  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;📄 `TwoPhase.py` - Two-Phase method solver  
