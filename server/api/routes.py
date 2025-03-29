@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from core.Simplex import Simplex
 from core.BigM import BigM
 from core.TwoPhase import TwoPhase
-# from core.GoalProgramming import GoalProgramming
+from core.GoalProgramming import GoalProgramming
 
 # Create Blueprint
 api_blueprint = Blueprint("api", __name__)
@@ -35,11 +35,11 @@ def solve_two_phase():
     result = two_phase_solver.solve()
     return jsonify(result)
 
-# @api_blueprint.route("/solve/goal-programming", methods=["POST"])
-# def solve_goal():
-#     data = request.json
-#     goal_solver = GoalProgramming(
-#         data["objective"], data["constraints"], data["rhs"], len(data["objective"])
-#     )
-#     result = goal_solver.solve()
-#     return jsonify(result)
+@api_blueprint.route("/solve/goal-programming", methods=["POST"])
+def solve_goal():
+    data = request.json
+    goal_solver = GoalProgramming(
+        data["goals_lhs"], data['goals'], data["constraints"], data["rhs"], len(data["objective"])
+    )
+    result = goal_solver.solve()
+    return jsonify(result)

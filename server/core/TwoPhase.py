@@ -1,5 +1,4 @@
 from core.Solver import Solver
-from core.Simplex import Simplex
 import numpy as np
 
 class TwoPhase(Solver):

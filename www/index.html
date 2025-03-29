@@ -28,10 +28,20 @@
     </div>
 
     <div class="mb-3">
-      <label for="constraints" class="form-label">Constraints (each row comma-separated, new line for next constraint):</label>
+      <label for="constraints" class="form-label">Constraints (each row comma-separated, new line for next
+        constraint):</label>
       <textarea class="form-control" id="constraints" rows="3" value="">2,1,<=,8
 1,2,<=,6</textarea>
     </div>
+
+    <div id="goalProgrammingOptions" class="mb-3" style="display: none;">
+      <label for="objectives" class="form-label">Objective Functions (each row comma-separated):</label>
+      <textarea class="form-control" id="objectives" rows="3"></textarea>
+
+      <label for="priorities" class="form-label">Priorities (comma-separated):</label>
+      <input type="text" class="form-control" id="priorities">
+    </div>
+
 
     <button class="btn btn-primary" id="solveBtn">Solve</button>
 
