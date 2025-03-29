@@ -116,6 +116,7 @@ def test_big_m3():
     assert result["optimal_value"] == pytest.approx(10)
     assert result["solution"] == [0.0, 5.0, 5.0]
 
+#infeasible
 def test_big_m4():
     # Example problem: Maximize z = 3x1 + 2x2
     # Subject to:
@@ -135,6 +136,20 @@ def test_big_m4():
 
     assert result["feasible"] == False
 
+#infeasible
+def  test_big_m5():
+    # Example problem: Maximize z = 3x1 + 2x2
+    # Subject to:
+    # 2x1 + x2 <= 8
+    # 2x1 + x2 >= 8
+    data = {"objective":[3,2],"constraints":[[2,1],[2,1]],"rhs":[8,8],"constraints_type":["<=",">="]}
+    
+    big_m_solver = BigM(
+        data["objective"], data["constraints"], data["rhs"], len(data["objective"]), data['constraints_type']
+    )
+    result = big_m_solver.solve()
+
+    assert result["feasible"] == False
 
 
 def test_two_phase1():
@@ -223,6 +238,20 @@ def test_two_phase4():
     num_variables = 2
 
     two_phase_solver = TwoPhase(objective, constraints, rhs, num_variables, constraints_type)
+    result = two_phase_solver.solve()
+
+    assert result["feasible"] == False
+
+def test_two_phase5():
+    # Example problem: Maximize z = 3x1 + 2x2
+    # Subject to:
+    # 2x1 + x2 <= 8
+    # 2x1 + x2 >= 8
+    data = {"objective":[3,2],"constraints":[[2,1],[2,1]],"rhs":[8,8],"constraints_type":["<=",">="]}
+    
+    two_phase_solver = TwoPhase(
+        data["objective"], data["constraints"], data["rhs"], len(data["objective"]), data['constraints_type']
+    )
     result = two_phase_solver.solve()
 
     assert result["feasible"] == False

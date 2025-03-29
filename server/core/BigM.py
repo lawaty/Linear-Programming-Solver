@@ -46,22 +46,36 @@ class BigM(Solver):
         for row in artificial_rows:
             tableau[-1, :] -= self.M * tableau[row , :]  # Penalize artificial variables
         
+        print("Initial Tableau:")
+        print(tableau.astype(int))
         return tableau
     
     
     def solve(self):
         """Implements the Big-M method using the base Solver utilities."""
+        c = 1
         while not self._is_optimal():
+            # print("Iteration: ", c)
             pivot_col = self._get_pivot_column()
             pivot_row = self._get_pivot_row(pivot_col)
+            if self.tableau[pivot_row, pivot_col] <= 0:
+                print("Unbounded solution detected.")
+                return {"feasible": False, "solution": None, "optimal_value": None, "history": self.history}
             self._apply_gauss(pivot_row, pivot_col)
             self._store_tableau()
+            # print(f"pivot_col = {pivot_col} , pivot_row = {pivot_row} , Tableau after iteration {c}:")
+            # print(self.tableau.astype(int) , "\n")
+
+            c += 1
+            if c > 10 :# Prevent infinite loop for testing
+                break
         
          # Check for infeasibility
-        artificial_values = self.tableau[:-1, self.artificial_vars]
-        if any(artificial_values[:, -1] > 0):  # Check if any artificial variable is non-zero
-            print("artificial vars = ", self.artificial_vars)
-            print(self.tableau.astype(int))
+        # artificial_values = self.tableau[:-1, self.artificial_vars]
+        # if any(artificial_values[:, -1] > 0):  # Check if any artificial variable is non-zero
+        # print(self.tableau.astype(int))
+        if not np.all(self.tableau[:, -1] >= 0) :
+            # print("artificial vars = ", self.artificial_vars)
             return {"feasible" : False , "solution": None, "optimal_value": None, "history": self.history}
         
         solution, optimal_value = self._extract_solution()
@@ -69,21 +83,17 @@ class BigM(Solver):
 
 
 if __name__ == "__main__":
-   # Example problem: Maximize z = 3x1 + 2x2
+    # Example problem: Maximize z = 3x1 + 2x2
     # Subject to:
-    # x1 + x2 <= 2
-    # 2x1 + 2x2 >= 6
-    objective = np.array([3, 2])
-    constraints = np.array([
-        [1, 1],
-        [2, 2]
-    ])
-    constraints_type = ['<=', '>=']
-    rhs = np.array([2, 6])
-    num_variables = 2
+    # 2x1 + x2 <= 8
+    # 2x1 + x2 >= 8
 
-    bigm_solver = BigM(objective, constraints, rhs, num_variables, constraints_type)
-    result = bigm_solver.solve()
+    data = {"objective":[3,2],"constraints":[[2,1],[2,1]],"rhs":[8,8],"constraints_type":["<=",">="]}
+    
+    big_m_solver = BigM(
+        data["objective"], data["constraints"], data["rhs"], len(data["objective"]), data['constraints_type']
+    )
+    result = big_m_solver.solve()
 
     print("Optimal Solution:", result["solution"])
     print("Optimal Value:", result["optimal_value"])

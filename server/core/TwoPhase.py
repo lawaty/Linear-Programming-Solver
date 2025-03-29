@@ -65,7 +65,10 @@ class TwoPhase(Solver):
                 artificials_exist.remove(pivot_row)
             self._apply_gauss(pivot_row, pivot_col)
             self._store_tableau()
-        if any(self.tableau[-1, :-1] < 0):
+        
+        # Check for infeasibility
+        print(self.tableau.astype(int))
+        if any(self.tableau[-1, :] < 0) or (any(self.tableau[-1, artificial_vars] != 0) and self.tableau[-1, -1] != 0) :
             return {"feasible" : False , "solution": None, "optimal_value": None, "history": self.history}
         
         self.tableau = np.delete(self.tableau, artificial_vars, axis=1)
@@ -85,6 +88,9 @@ class TwoPhase(Solver):
         while not self._is_optimal():
             pivot_col = self._get_pivot_column()
             pivot_row = self._get_pivot_row(pivot_col)
+            if self.tableau[pivot_row, pivot_col] <= 0:
+                print("Unbounded solution detected.")
+                return {"feasible": False, "solution": None, "optimal_value": None, "history": self.history}
             self._apply_gauss(pivot_row, pivot_col)
             self._store_tableau()
             print(self.tableau , "\n")
