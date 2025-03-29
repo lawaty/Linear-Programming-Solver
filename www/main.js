@@ -15,8 +15,9 @@ $(document).ready(() => {
 
     if (method === "goal-programming") {
       let objectives = $("#objectives").val().split("\n").map(row => row.split(",").map(Number));
+      console.log(objectives)
       let priorities = $("#priorities").val().split(",").map(Number);
-      jsonData = { "objectives": objectives, "priorities": priorities };
+      jsonData = { goals_lhs: [], goals: objectives, "priorities": priorities };
     } else {
       let objective = $("#objective").val().split(",").map(Number);
       jsonData = { "objective": objective };
