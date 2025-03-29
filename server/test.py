@@ -257,17 +257,34 @@ def test_two_phase5():
     assert result["feasible"] == False
 
 def test_goal_programming():
-    # Example problem: Minimize deviations with priorities
-    objective = np.array([0, 0])
-    constraints = np.array([
-        [1, 1]
+    # Example problem for Preemptive Goal Programming
+        # set to: 
+        # 7x1 + 3x2 >= 40       # 1st goal
+        # 10x1 + 5x2 >= 60      # 2nd goal
+        # 5x1 + 4x2 >= 35       # 3rd goal
+        # 100x1 + 60x2 <= 600   # constraint
+
+    goals_lhs = np.array([
+        [7, 3],
+        [10, 5],
+        [5, 4]
     ])
-    rhs = np.array([10])
+    goals = np.array([40, 60, 35])
+    
+    constraints = np.array([
+        [100, 60]
+    ])
+    constraints_rhs = np.array([600])
+    constraints_type = ['<=']
+    
     num_variables = 2
 
-    goal_programming_solver = GoalProgramming(objective, constraints, rhs, num_variables)
+    goal_programming_solver = GoalProgramming(goals, goals_lhs,constraints, constraints_rhs, constraints_type ,num_variables)
     result = goal_programming_solver.solve()
 
+    # print("optimized:", result["optimized"])
+    # print("Optimal Value:", result["optimal_value"])
     # Since the example is minimal, we just check if the solver runs without errors
-    assert isinstance(result["solution"], list)
-    assert isinstance(result["optimal_value"], float)
+    assert result["optimized"] == [True, True, False]
+    assert result["optimal_value"] == pytest.approx([0.0, 0.0, 5.0])
+

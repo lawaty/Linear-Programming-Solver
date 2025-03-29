@@ -30,12 +30,14 @@ class Solver:
                 
         return np.argmin(ratios)
     
-    def _apply_gauss(self, pivot_row, pivot_col):
+    def _apply_gauss(self, pivot_row, pivot_col , tableau=None):
+        if tableau is None:
+            tableau = self.tableau
         """Normalize Pivot Row, then apply ERO to the other rows"""
-        self.tableau[pivot_row, :] /= self.tableau[pivot_row, pivot_col]
-        for i in range(self.tableau.shape[0]):
+        tableau[pivot_row, :] /= tableau[pivot_row, pivot_col]
+        for i in range(tableau.shape[0]):
             if i != pivot_row:
-                self.tableau[i, :] -= self.tableau[i, pivot_col] * self.tableau[pivot_row, :]
+                tableau[i, :] -= tableau[i, pivot_col] * tableau[pivot_row, :]
 
     def _is_optimal(self):
         return np.all(self.tableau[-1, :-1] >= 0)

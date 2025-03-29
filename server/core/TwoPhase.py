@@ -12,7 +12,7 @@ class TwoPhase(Solver):
         self.num_artificial = sum(1 for type in self.constraints_type if type in ['=' , '>='])  # Count artificial variables
         num_surplus = sum(1 for type in self.constraints_type if type == '>=')  # Count surplus variables
         self.num_slacks = sum(1 for type in self.constraints_type if type == '<=' )  # Count slack variables
-        tableau = np.zeros((rows + 1, self.cols + self.num_slacks+ self.num_slacks + self.num_artificial + 1))
+        tableau = np.zeros((rows + 1, self.cols + self.num_slacks+ num_surplus + self.num_artificial + 1))
         self.vars_on_left = np.arange(self.cols, self.cols + self.num_slacks + self.num_artificial)  # Slack variables + artificial variables
         # Constraints Rows
         tableau[:-1, :self.cols] = self.constraints  # Decision variables

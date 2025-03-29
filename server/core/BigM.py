@@ -53,9 +53,7 @@ class BigM(Solver):
     
     def solve(self):
         """Implements the Big-M method using the base Solver utilities."""
-        c = 1
         while not self._is_optimal():
-            # print("Iteration: ", c)
             pivot_col = self._get_pivot_column()
             pivot_row = self._get_pivot_row(pivot_col)
             if self.tableau[pivot_row, pivot_col] <= 0:
@@ -63,12 +61,6 @@ class BigM(Solver):
                 return {"feasible": False, "solution": None, "optimal_value": None, "history": self.history}
             self._apply_gauss(pivot_row, pivot_col)
             self._store_tableau()
-            # print(f"pivot_col = {pivot_col} , pivot_row = {pivot_row} , Tableau after iteration {c}:")
-            # print(self.tableau.astype(int) , "\n")
-
-            c += 1
-            if c > 10 :# Prevent infinite loop for testing
-                break
         
          # Check for infeasibility
         # artificial_values = self.tableau[:-1, self.artificial_vars]
