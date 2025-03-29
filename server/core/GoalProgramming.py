@@ -2,10 +2,10 @@ from core.Solver import Solver
 import numpy as np
 import sympy as sp
 np.set_printoptions(precision=2, suppress=True)
+
 class GoalProgramming(Solver):
     def __init__(self, goals, goals_lhs, priorities,constraints, constraints_rhs, constraints_type ,num_variables):
         sorted_indices = np.argsort(priorities)  # Sort indices based on priorities 
-        print(sorted_indices)
         goals = goals[sorted_indices]
         goals_lhs = goals_lhs[sorted_indices]  # Sort goals_lhs based on sorted indices
         # priorities = priorities[sorted_indices]  # Sort priorities based on sorted indices

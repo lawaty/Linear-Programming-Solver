@@ -27,21 +27,23 @@
       <input type="text" class="form-control" id="objective" value="3, 2">
     </div>
 
+    <div id="goalProgrammingOptions" class="mb-3" style="display: none;">
+      <label for="goalsInput" class="form-label">
+        Objective Functions (one per line, CSV format like <code>3,2,=,5</code>):
+      </label>
+      <textarea class="form-control" id="goalsInput" rows="3">7,3,=,40
+5,4,=,35
+10,5,=,60</textarea>
+    
+      <label for="priorities" class="form-label">Priorities (comma-separated):</label>
+      <input value="1,3,2" type="text" class="form-control" id="priorities">
+    </div>
+    
     <div class="mb-3">
       <label for="constraints" class="form-label">Constraints (each row comma-separated, new line for next
         constraint):</label>
-      <textarea class="form-control" id="constraints" rows="3" value="">2,1,<=,8
-1,2,<=,6</textarea>
+      <textarea class="form-control" id="constraints" rows="3" value="">100,60,<=,600</textarea>
     </div>
-
-    <div id="goalProgrammingOptions" class="mb-3" style="display: none;">
-      <label for="objectives" class="form-label">Objective Functions (each row comma-separated):</label>
-      <textarea class="form-control" id="objectives" rows="3"></textarea>
-
-      <label for="priorities" class="form-label">Priorities (comma-separated):</label>
-      <input type="text" class="form-control" id="priorities">
-    </div>
-
 
     <button class="btn btn-primary" id="solveBtn">Solve</button>
 

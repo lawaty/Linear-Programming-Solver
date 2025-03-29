@@ -38,8 +38,9 @@ def solve_two_phase():
 @api_blueprint.route("/solve/goal-programming", methods=["POST"])
 def solve_goal():
     data = request.json
+    print(data, len(data["goals_lhs"][0]))
     goal_solver = GoalProgramming(
-        data["goals_lhs"], data['goals'], data["constraints"], data["rhs"], len(data["objective"])
+        data["goals_lhs"], data['goals'], data['priorities'], data["constraints"], data["rhs"], data['constraints_type'], len(data["goals_lhs"][0])
     )
     result = goal_solver.solve()
     return jsonify(result)

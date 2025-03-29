@@ -1,23 +1,47 @@
 $(document).ready(() => {
-  $("#lpMethod").on('change', function () {
+  $("#lpMethod").on("change", function () {
     if ($(this).val() === "goal-programming") {
       $("#goalProgrammingOptions").show();
-      $("#objective").closest('.mb-3').hide(); // Hide single-objective field
+      $("#objective").closest(".mb-3").hide();
     } else {
       $("#goalProgrammingOptions").hide();
-      $("#objective").closest('.mb-3').show(); // Show single-objective field
+      $("#objective").closest(".mb-3").show();
     }
   });
 
-  $("#solveBtn").on('click', function () {
+  function parseGoalProgrammingInput(input) {
+    let goals_lhs = [];
+    let goals = [];
+
+    input.split("\n").forEach(row => {
+      let parts = row.split(",").map(v => v.trim());
+
+      let typeIndex = parts.findIndex(val => ["=", "<=", ">="].includes(val));
+      if (typeIndex === -1) {
+        alert("Invalid goal format: " + row);
+        return;
+      }
+
+      let lhs = parts.slice(0, typeIndex).map(Number); // Extract coefficients
+      let rhs = Number(parts[typeIndex + 1]); // Extract RHS value
+
+      goals_lhs.push(lhs);
+      goals.push(rhs);
+    });
+
+    return { goals_lhs, goals };
+  }
+
+  $("#solveBtn").on("click", function () {
     let method = $("#lpMethod").val();
     let jsonData = {};
 
     if (method === "goal-programming") {
-      let objectives = $("#objectives").val().split("\n").map(row => row.split(",").map(Number));
-      console.log(objectives)
+      let goalInput = $("#goalsInput").val();
       let priorities = $("#priorities").val().split(",").map(Number);
-      jsonData = { goals_lhs: [], goals: objectives, "priorities": priorities };
+      let { goals_lhs, goals } = parseGoalProgrammingInput(goalInput);
+
+      jsonData = { "goals_lhs": goals_lhs, "goals": goals, "priorities": priorities };
     } else {
       let objective = $("#objective").val().split(",").map(Number);
       jsonData = { "objective": objective };
@@ -28,15 +52,15 @@ $(document).ready(() => {
     let rhs = [];
 
     $("#constraints").val().split("\n").forEach(row => {
-      let parts = row.split(",");
+      let parts = row.split(",").map(v => v.trim());
       let typeIndex = parts.findIndex(val => ["<=", ">=", "="].includes(val));
 
-      if (method === 'simplex' && parts.includes('>='))
-        alert('simplex cannot solve constraints with ">=" sign');
+      if (method === "simplex" && parts.includes(">=")) 
+        alert('Simplex cannot solve constraints with ">=" sign.');
 
       if (typeIndex !== -1) {
         constraints_type.push(parts[typeIndex]);
-        rhs.push(Number(parts[parts.length - 1]));
+        rhs.push(Number(parts[typeIndex + 1]));
         constraints.push(parts.slice(0, typeIndex).map(Number));
       }
     });
