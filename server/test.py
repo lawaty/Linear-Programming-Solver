@@ -266,10 +266,11 @@ def test_goal_programming():
 
     goals_lhs = np.array([
         [7, 3],
+        [5, 4],
         [10, 5],
-        [5, 4]
     ])
-    goals = np.array([40, 60, 35])
+    goals = np.array([40, 35,60 ])
+    priorities = np.array([1, 3, 2])
     
     constraints = np.array([
         [100, 60]
@@ -279,7 +280,7 @@ def test_goal_programming():
     
     num_variables = 2
 
-    goal_programming_solver = GoalProgramming(goals, goals_lhs,constraints, constraints_rhs, constraints_type ,num_variables)
+    goal_programming_solver = GoalProgramming(goals, goals_lhs, priorities,constraints, constraints_rhs, constraints_type ,num_variables)
     result = goal_programming_solver.solve()
 
     # print("optimized:", result["optimized"])

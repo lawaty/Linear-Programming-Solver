@@ -3,8 +3,13 @@ import numpy as np
 import sympy as sp
 np.set_printoptions(precision=2, suppress=True)
 class GoalProgramming(Solver):
-    def __init__(self, goals, goals_lhs,constraints, constraints_rhs, constraints_type ,num_variables):
-        
+    def __init__(self, goals, goals_lhs, priorities,constraints, constraints_rhs, constraints_type ,num_variables):
+        sorted_indices = np.argsort(priorities)  # Sort indices based on priorities 
+        print(sorted_indices)
+        goals = goals[sorted_indices]
+        goals_lhs = goals_lhs[sorted_indices]  # Sort goals_lhs based on sorted indices
+        # priorities = priorities[sorted_indices]  # Sort priorities based on sorted indices
+
         self.Ps = np.array([sp.symbols(f'P{i+1}') for i in range(len(goals))])
         self.goals = np.array(goals, dtype=float)
         self.num_goals = len(goals)
@@ -163,10 +168,11 @@ if __name__ == "__main__":
 
     goals_lhs = np.array([
         [7, 3],
+        [5, 4],
         [10, 5],
-        [5, 4]
     ])
-    goals = np.array([40, 60, 35])
+    goals = np.array([40, 35,60 ])
+    priorities = np.array([1, 3, 2])
     
     constraints = np.array([
         [100, 60]
@@ -176,7 +182,7 @@ if __name__ == "__main__":
     
     num_variables = 2
 
-    goal_programming_solver = GoalProgramming(goals, goals_lhs,constraints, constraints_rhs, constraints_type ,num_variables)
+    goal_programming_solver = GoalProgramming(goals, goals_lhs, priorities,constraints, constraints_rhs, constraints_type ,num_variables)
     result = goal_programming_solver.solve()
 
     print("optimized:", result["optimized"])
