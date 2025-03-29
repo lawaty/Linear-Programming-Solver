@@ -52,9 +52,6 @@ class GoalProgramming(Solver):
 
     #filling tableau with goals and constraints
         # goals objective rows
-        # print("self.goals_lhs: \n", self.goals_lhs)
-        # print(f"self.goals_objective_rows: {self.goals_objective_rows}")
-        # print(f"vars_cols: {vars_cols}")
         tableau[np.ix_(self.goals_objective_rows, vars_cols)] = self.goals_lhs  # Decision variables  #BUG *p
         tableau[np.ix_(self.goals_objective_rows, dp_cols)] = -np.eye(self.num_goals)  # d+ variables #BUG *p
         tableau[self.goals_objective_rows, -1] = self.goals  # RHS column #BUG *p
@@ -80,24 +77,16 @@ class GoalProgramming(Solver):
 
        
        
-        # print("Initial Tableau:")
-        # print(tableau , "\n")
-        # print("Initial P Tableau:")
-        # print(p_tableau.astype(int) , "\n")
         return tableau
 
     def solve(self):
         """Implements the preemptive goal programming algorithm."""
         for i in range(self.num_goals):
-            print(f"iteration: {i+1}")
             partial_rows = list(range(self.total_rows_num))
             partial_rows = [row for row in partial_rows if row not in self.goals_objective_rows or (row in self.goals_objective_rows and row == i)]
-            # print("partial_rows: ", partial_rows)
             partial_tableau = self.tableau[partial_rows, :]
             partial_tableau[0 , :] /= self.Ps[i] # remove ps temporarily for calculating pivot row and column
             partial_tableau = partial_tableau.astype(float)  # Convert to float for division
-            # print(f"Partial Tableau i = {i}:")
-            # print(partial_tableau , "\n")
 
 
             # Check if all elements in the first row are non-positive
@@ -123,12 +112,7 @@ class GoalProgramming(Solver):
             
             partial_pivot_row = np.argmin(ratios , ) + 1
             pivot_row  = partial_pivot_row + self.num_goals -1 # Adjust for the offset of the original tableau 
-            # print("Pivot Row: ", pivot_row)
-            # print("Pivot Column: ", pivot_col)
-
-            # print("Tableau before gaussian:")
-            # print(partial_tableau , "\n")
-            
+          
             # Apply gaussain
             self.tableau[pivot_row, :] /= self.tableau[pivot_row, pivot_col]
             for j in range(self.tableau.shape[0]):
@@ -139,44 +123,21 @@ class GoalProgramming(Solver):
             partial_tableau = self.tableau[partial_rows, :]
             partial_tableau[0 , :] /= self.Ps[i] # remove ps temporarily for calculating pivot row and column
             partial_tableau = partial_tableau.astype(float)  # Convert to float for division
-            # print("Tableau after gaussian:")
-            # print(self.tableau , "\n")
-
-            # print("Partial Tableau after Gaussian Elimination:")
-            # print(partial_tableau , "\n")
-            # print("full tableau after Gaussian Elimination:")
-            # print(self.tableau , "\n")
-
+           
             
             for j in range(partial_tableau.shape[1] ):
-                # print(f'j: {j}')
-                # if isinstance(partial_tableau[0, j], (int, float)):
                 if partial_tableau[0, j] > 1e-10:
                     print(f"goal{i+1} not optimized")
                     break
-                # else:
-                    # print(partial_tableau[0, j].as_coeff_mul(partial_tableau[0, j])[0])
-                # elif float(partial_tableau[0, i].as_coeff_mul(partial_tableau[0, i])[0]) > 0:
-                    # print(f"goal{i} not optimized")
-                    # break
-                # if all(float(value) <= 0 for value in partial_tableau[0, :] ):
             else:
                 print(f"goal {i+1} optimized.")
                 self.goals_achived.append(i)
-                # return {"feasible": False, "solution": None, "optimal_value": None, "history": self.history}
             
             partial_tableau = partial_tableau.astype(object) # Convert back to object for symbolic operations
             partial_tableau[0 , :] *= self.Ps[i] # restore ps after calculating pivot row and column
             self.tableau[partial_rows, :] = partial_tableau # Update the original tableau with the modified partial tableau
             
 
-        # while not self._is_optimal():
-            # pivot_col = self._get_pivot_column()
-            # pivot_row = self._get_pivot_row(pivot_col)
-            # if self.tableau[pivot_row, pivot_col] <= 0:
-                # print("Unbounded solution detected.")
-                # return {"feasible": False, "solution": None, "optimal_value": None, "history": self.history}
-            # self._apply_gauss(pivot_row, pivot_col)
             self._store_tableau()
         
 
