@@ -55,7 +55,7 @@ $(document).ready(() => {
       let parts = row.split(",").map(v => v.trim());
       let typeIndex = parts.findIndex(val => ["<=", ">=", "="].includes(val));
 
-      if (method === "simplex" && parts.includes(">="))
+      if (method === "simplex" && parts.includes(">=")) 
         alert('Simplex cannot solve constraints with ">=" sign.');
 
       if (typeIndex !== -1) {
@@ -94,38 +94,23 @@ $(document).ready(() => {
         });
 
         if (response.feasible || response.optimized?.includes(true)) {
-          let solutionHtml = `<h5>Optimal Solution</h5>`;
+          let solutionHtml = `<h5>Optimal Solution</h5><table class="table table-bordered">
+            <tr><th>Variable</th><th>Value</th></tr>`;
+          response.solution.forEach((val, idx) => {
+            solutionHtml += `<tr><td>x${idx + 1}</td><td>${val.toFixed(2)}</td></tr>`;
+          });
 
           if (method === "goal-programming") {
-            response.solution.forEach((solutionSet, objIdx) => {
-              solutionHtml += `<h6>Objective ${objIdx + 1}</h6>`;
-              solutionHtml += `<table class="table table-bordered">
-                <tr><th>Variable</th><th>Value</th></tr>`;
-
-              solutionSet.forEach((val, idx) => {
-                solutionHtml += `<tr><td>x${idx + 1}</td><td>${val.toFixed(2)}</td></tr>`;
-              });
-
-              solutionHtml += `<tr><td><strong>Optimal Value</strong></td><td><strong>${response.optimal_value[objIdx].toFixed(2)}</strong></td></tr>`;
-              solutionHtml += `</table>`;
-            });
+            solutionHtml += `<tr><td><strong>Optimal Values</strong></td><td><strong>${response.optimal_value.map(v => v.toFixed(2)).join(", ")}</strong></td></tr>`;
           } else {
-            solutionHtml += `<table class="table table-bordered">
-              <tr><th>Variable</th><th>Value</th></tr>`;
-
-            response.solution.forEach((val, idx) => {
-              solutionHtml += `<tr><td>x${idx + 1}</td><td>${val.toFixed(2)}</td></tr>`;
-            });
-
             solutionHtml += `<tr><td><strong>Optimal Value</strong></td><td><strong>${response.optimal_value.toFixed(2)}</strong></td></tr>`;
-            solutionHtml += `</table>`;
           }
 
+          solutionHtml += `</table>`;
           $("#output").append(solutionHtml);
         } else {
           $("#output").append("<p class='text-danger'>No feasible solution found.</p>");
         }
-
       },
       error: function (xhr, status, error) {
         $("#output").text("Error: " + xhr.responseText);
