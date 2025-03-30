@@ -123,7 +123,7 @@ class GoalProgramming(Solver):
             for j in range(self.tableau.shape[0]):
                 if j != pivot_row:
                     self.tableau[j, :] -= self.tableau[j, pivot_col] * self.tableau[pivot_row, :]
-            self._store_tableau()
+            # self._store_tableau()
             
             partial_tableau = self.tableau[partial_rows, :]
             partial_tableau[0 , :] /= self.Ps[i] # remove ps temporarily for calculating pivot row and column
@@ -153,6 +153,7 @@ class GoalProgramming(Solver):
         self.tableau = self.tableau.astype(float)
         return {"optimized":  [True if i in self.goals_achived else False for i in range(self.num_goals)],
                 "optimal_value":self.tableau[self.goals_objective_rows , -1],
+                "solution": self.tableau[self.num_goals : self.num_goals+self.num_variables , -1],
                   "history": self.history
                   }
 
@@ -187,4 +188,5 @@ if __name__ == "__main__":
 
     print("optimized:", result["optimized"])
     print("Optimal Value:", result["optimal_value"])
+    print("Solution:", result["solution"])
     # print("History of Tableaus:\n", result["history"])
